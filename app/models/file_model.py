@@ -1,5 +1,6 @@
 from datetime import datetime
-from sqlalchemy import Column, DateTime, Integer, String, Text
+from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey
+from sqlalchemy.orm import relationship
 from app.database import Base
 
 
@@ -16,3 +17,19 @@ class FileJob(Base):
     error_message = Column(Text, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    records = relationship(
+        "FileDataRecord", back_populates="job", cascade="all, delete-orphan"
+    )
+
+
+class FileDataRecord(Base):
+    __tablename__ = "file_data_records"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    job_id = Column(Integer, ForeignKey("file_jobs.id"), nullable=False)
+    row_number = Column(Integer, nullable=False)
+    content = Column(Text, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    job = relationship("FileJob", back_populates="records")
