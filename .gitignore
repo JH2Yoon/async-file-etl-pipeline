@@ -27,3 +27,10 @@ Thumbs.db
 dist/
 build/
 *.egg-info/
+
+# 파일 ETL 관련 업로드 및 아카이빙 디렉토리
+uploads/
+archive/
+
+# ETL 로그 파일
+etl_pipeline.log
